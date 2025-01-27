@@ -1,24 +1,45 @@
-# 🚀 Unsupervised Data Augmentation for Text Classification using BERT 🚀
+# 🌟 **Unsupervised Data Augmentation for Text Classification with BERT**
 
-*Authors:*
-- Dhairya Lalwani  
-- Gokul Ranga Naveen Chapala
+## 📖 **Overview**
+This project explores **Unsupervised Data Augmentation (UDA)** techniques to enhance text classification performance using **BERT**. UDA leverages advanced data augmentation methods, such as **back-translation** and **TF-IDF based word replacement**, to utilize large amounts of unlabeled data. This allows for improved model generalization, reduced reliance on labeled data, and enhanced classification accuracy.
+
+The project demonstrates UDA’s effectiveness across several well-known datasets and compares its performance against traditional supervised learning methods.
+
+---
+
+## ✨ **Features**
+- 🚀 **Implementation of UDA** for semi-supervised text classification.
+- 🤖 Utilization of **BERT** pre-trained models (BERT-Base and BERT-Large).
+- 🔄 **Advanced augmentation techniques**:
+  - 🔁 **Back-translation**: Generates paraphrased text for data diversity.
+  - ✍️ **TF-IDF word replacement**: Replaces low-information words while preserving critical keywords.
+- 📊 **Evaluated on diverse datasets**:
+  - 🎥 **IMDb**: Binary sentiment classification.
+  - 📝 **Yelp-2 and Yelp-5**: Sentiment analysis.
+  - 🛒 **Amazon-2 and Amazon-5**: Product review classification.
+  - 📚 **DBpedia**: Topic classification.
+- ⚡ **Error rate reductions** and accuracy improvements across datasets.
+- ⚙️ **Flexible Hyperparameters**: Control augmentation diversity, unsupervised loss weight, batch size, etc.
+- 🔋 **GPU & TPU Support**: Easily switch between local GPU training or large-scale TPU v3-32 Pod training.
+- 💡**High Accuracy**: Achieve around 90% accuracy on baseline GPU and 95%+ with TPU + UDA.
+
+
+---
+
+## 📚 **Datasets**
+The project uses multiple text classification datasets:
+1. 🎥 **IMDb**: Binary sentiment classification for movie reviews.
+2. 📝 **Yelp-2 and Yelp-5**: Binary and multi-class sentiment analysis of customer reviews.
+3. 🛒 **Amazon-2 and Amazon-5**: Binary and multi-class product review classification.
+4. 📚 **DBpedia**: Topic classification from structured data.
+
 ---
 
 
-## ✨ Features
-
-- **Baseline & UDA Experiments**: Scripts to run both standard BERT fine-tuning and UDA-based fine-tuning.
-- **Back Translation**: Automated data augmentation by translating to another language and back to English.
-- **Flexible Hyperparameters**: Control augmentation diversity, unsupervised loss weight, batch size, etc.
-- **GPU & TPU Support**: Easily switch between local GPU training or large-scale TPU v3-32 Pod training.
-- **High Accuracy**: Achieve around 90% accuracy on baseline GPU and 95%+ with TPU + UDA.
-
----
 
 ## 🎉 Requirements
 
-The code is tested on **Python 3.7** and **Tensorflow 1.13**.  
+The code is tested on **🐍 Python 3.8 or above.** and **Tensorflow 1.13**.  
 
 After installing Tensorflow, run the following commands to install dependencies:
 
@@ -30,7 +51,7 @@ pip install torch torchvision  # This installs PyTorch
 ```
 ## ⚙️ Instructions
 
-If you want to run **UDA with BERT base** on a GPU with **11 GB memory**, run the following commands:
+To run **UDA** with **BERT** base on a GPU with **11 GB memory**, use the following commands:
 
 ```bash
 # Set a larger max_seq_length if your GPU has more than 11GB memory
@@ -53,9 +74,9 @@ bash scripts/run_base_uda.sh --train_batch_size=8 --max_seq_length=${MAX_SEQ_LEN
 
 ## ☁️ Run on Cloud TPU v3-32 Pod
 
-The best performance in this code is achieved by using a `max_seq_length` of **512** and initializing with **BERT large** finetuned on in-domain unsupervised data.
+For the best performance,use a `max_seq_length` of **512** and initialize with **BERT large** ,finetuned on in-domain unsupervised data.
 
-If you have access to **Google Cloud TPU v3-32 Pod**, try:
+If you have access to **Google Cloud TPU v3-32 Pod**, run the following commands:
 
 ```bash
 MAX_SEQ_LENGTH=512
@@ -72,7 +93,8 @@ bash train_large_ft_uda_tpu.sh
 
 ## 🔀 Run Back Translation Data Augmentation on the Dataset
 
-Install the following dependencies:
+To perform back translation for data augmentation, install the following dependencies:
+
 
 ```bash
 pip install --user nltk
@@ -86,6 +108,10 @@ How it works:
 3. Translates them back into English.
 4. Composes the paraphrased sentences back into paragraphs.
 5. Go to the back_translate directory and run:
+
+## Run Back Translation
+Navigate to the back_translate directory and execute the following commands:
+
 ```bash
 bash download.sh
 bash run.sh
@@ -94,27 +120,37 @@ bash run.sh
 ## ⚙️ Guidelines for Hyperparameters
 
 **sampling_temp**: Controls the diversity and quality of paraphrases. Increasing `sampling_temp` increases diversity but may reduce quality.  
-- Try `sampling_temp = 0.7, 0.8, or 0.9`.  
-- If your task is robust to noise, `sampling_temp = 0.9` or `0.8` should lead to improved performance.  
+- Recommended values: `sampling_temp = 0.7, 0.8, or 0.9`.  
+- For tasks with high quality requirements, `sampling_temp = 0.9` or `0.8` should lead to improved performance.  
+
+**unsup_coeff**: Controls the weight of unsupervised loss.
+- Set to **1** for balanced supervised and unsupervised losses.
+
+**Learning Rate**: Use a lower learning rate than pure supervised learning because there are two loss terms (labeled + unlabeled data).
+- If you have a **small dataset**, tweak `uda_softmax_temp` and `uda_confidence_thresh`.
+
+**uda_softmax_temp** and **uda_confidence_thresh**: Controls the diversity and quality of paraphrases. Increasing `uda_softmax_temp` increases diversity but may reduce quality.
 
 To perform back translation on a large file, adjust `replicas` and `worker_id` in `run.sh`. For example, `replicas=3` divides the data into three parts, and each `run.sh` processes one part based on the `worker_id`.
 
+**Running back translation on a large file**
+To Process large datsets adjust the `replicas` and `worker_id` in `run.sh`.:
+For example, `replicas=3` divides the data into three parts, and each `run.sh` processes one part based on the `worker_id`.
 ---
 
 ## 📌 General Guidelines for Setting Hyperparameters
+1. **Batch Size**: If your GPU has a larger memory, increase `train_batch_size` to improve performance.
+2. **Sequence Length**: Use larger `max_seq_length` Especially for tasks requiring deep contextual understanding.
+3. **Effective augmentation** : Standard augmentations from supervised learning often work well with UDA when combined with the unsupervised objective.
 
-- **unsup_coeff**: Set to **1** for good results.
-- **Learning Rate**: Use a lower learning rate than pure supervised learning because there are two loss terms (labeled + unlabeled data).
-- If you have a **small dataset**, tweak `uda_softmax_temp` and `uda_confidence_thresh`.
-- **Effective augmentation** for supervised learning typically works well for UDA.
 
 ---
 
 ## 🙏 Acknowledgement
 
-A good portion of the code is taken from **BERT** and **RandAugment**.  
-**Thanks!**
+This project builds on and integrates components from **BERT** and **RandAugment**. We appreciate their contributions to the community.
 
+**Thank you!**
 
 ## 📚 Citation
 

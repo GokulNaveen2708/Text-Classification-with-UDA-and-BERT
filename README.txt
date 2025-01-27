@@ -1,6 +1,6 @@
 ***
 
-Unsupervised Data Augmentation ​for Text Classification ​using Bert​
+Unsupervised Data Augmentation for Text Classification with BERT
 
 -Dhairya Lalwani  ​
 -Gokul Ranga Naveen Chapala ​
