@@ -7,6 +7,12 @@ The project demonstrates UDA’s effectiveness across several well-known dataset
 
 ---
 
+## 👥 Authors:
+
+- Gokul Ranga Naveen Chapala
+- Dhairya Lalwani
+
+
 ## ✨ **Features**
 - 🚀 **Implementation of UDA** for semi-supervised text classification.
 - 🤖 Utilization of **BERT** pre-trained models (BERT-Base and BERT-Large).
